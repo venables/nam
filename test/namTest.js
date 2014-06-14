@@ -40,10 +40,18 @@ nam.preprocess('less', function(filepath, content, callback) {
   callback(null, content + '.green { color: green; }');
 });
 
-nam.processFilepath(path.join(__dirname, 'fixtures', 'less', 'app.css.less'), function(err, result) {
+var filepath = path.join(__dirname, 'fixtures', 'less', 'app.css.less')
+nam.processFilepath(filepath, function(err, result) {
   if (err) {
     return console.error(err);
   }
 
+  console.log('Callback result:');
   console.log(result);
+
+  nam.get(filepath, function(err, _content) {
+    console.log('\n\n\nNam cache:');
+    console.log(_content);
+  });
+
 });

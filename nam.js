@@ -6,9 +6,9 @@ var fs = require('fs');
 var path = require('path');
 
 var nam = {
-  assets: [],
   preprocessors: [],
-  postprocessors: []
+  postprocessors: [],
+  processedAssets: {}
 };
 
 nam.preprocess = function(extension, callback) {
@@ -19,9 +19,15 @@ nam.postprocess = function(extension, callback) {
   nam.postprocessors.push({ extension: extension, process: callback });
 };
 
-/*
- * filepath: /Users/mattvenables/application.css
- */
+// Lazy process file
+nam.get = function(filepath, callback) {
+  if (nam.processedAssets[filepath]) {
+    return callback(null, nam.processedAssets[filepath]);
+  }
+
+  nam.processFilepath(filepath, callback);
+}
+
 nam.processFilepath = function(filepath, callback) {
   fs.readFile(filepath, { encoding: 'utf8' }, function(err, content) {
     if (err) {
@@ -42,6 +48,11 @@ nam.processFilepath = function(filepath, callback) {
         });
       }
     ], function(err) {
+      if (err) {
+        return callback(err);
+      }
+
+      nam.processedAssets[filepath] = content;
       callback(err, content);
     });
   });
