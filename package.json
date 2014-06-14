@@ -1,0 +1,20 @@
+{
+  "name": "nam",
+  "version": "0.0.0",
+  "description": "Node Asset Manager/Maker",
+  "main": "nam.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "async": "^0.9.0"
+  },
+  "devDependencies": {
+    "less": "^1.7.1"
+  },
+  "scripts": {
+    "test": "node test/namTest.js"
+  },
+  "author": "",
+  "license": "MIT"
+}
