@@ -1,16 +1,22 @@
 'use strict';
 
+var crypto = require('crypto');
 var less = require('less');
 var nam = require('../nam');
 var path = require('path');
 
 nam.postprocess('*', function(filepath, content, callback) {
-  console.log('and we\'re done');
+  var fileParts = filepath.split('.');
+  var filename = fileParts.shift();
+  var extension = fileParts.shift();
+  var hash = crypto.createHash('md5').update(content).digest('hex');
+  console.log('Would save as: ' + filename + '-' + hash + '.' + extension);
+
   callback(null, content);
 });
 
 nam.postprocess('css', function(filepath, content, callback) {
-  console.log('DONE!');
+  console.log('CSS done processing!');
   callback(null, content);
 });
 
