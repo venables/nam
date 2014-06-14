@@ -1,8 +1,9 @@
 'use strict';
 
+var _ = require('underscore');
 var async = require('async');
 var fs = require('fs');
-var _ = require('underscore');
+var path = require('path');
 
 var nam = {
   assets: [],
@@ -47,7 +48,8 @@ nam.processFilepath = function(filepath, callback) {
 };
 
 nam.preprocessContent = function(filepath, content, callback) {
-  var fileParts = filepath.split('.');
+  var filename = path.basename(filepath);
+  var fileParts = filename.split('.');
   var filename = fileParts.shift();
 
   async.eachSeries(fileParts.reverse(), function(extension, next) {
@@ -73,7 +75,8 @@ nam.preprocessContent = function(filepath, content, callback) {
 };
 
 nam.postprocessContent = function(filepath, content, callback) {
-  var fileParts = filepath.split('.');
+  var filename = path.basename(filepath);
+  var fileParts = filename.split('.');
   var filename = fileParts.shift();
   var extension = fileParts.shift();
 
