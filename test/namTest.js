@@ -4,6 +4,16 @@ var less = require('less');
 var nam = require('../nam');
 var path = require('path');
 
+nam.postprocess('*', function(filepath, content, callback) {
+  console.log('and we\'re done');
+  callback(null, content);
+});
+
+nam.postprocess('css', function(filepath, content, callback) {
+  console.log('DONE!');
+  callback(null, content);
+});
+
 nam.preprocess('less', function(filepath, content, callback) {
   var parser = new less.Parser({ filename: filepath });
 
