@@ -16,13 +16,17 @@ nam.preprocess('less', function(filepath, content, callback) {
   })
 });
 
+nam.preprocess('*', function(filepath, content, callback) {
+  callback(null, content);
+});
+
 nam.preprocess('less', function(filepath, content, callback) {
   callback(null, content + '.green { color: green; }');
 });
 
 nam.processFilepath(path.join(__dirname, 'fixtures', 'less', 'app.css.less'), function(err, result) {
   if (err) {
-    console.error(err);
+    return console.error(err);
   }
 
   console.log(result);

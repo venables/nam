@@ -2,15 +2,15 @@
 
 var async = require('async');
 var fs = require('fs');
+var _ = require('underscore');
 
 var nam = {
   assets: [],
-  preprocessors: {}
+  preprocessors: []
 };
 
 nam.preprocess = function(extension, callback) {
-  nam.preprocessors[extension] = nam.preprocessors[extension] || [];
-  nam.preprocessors[extension].push(callback);
+  nam.preprocessors.push({ extension: extension, processor: callback });
 };
 
 /*
@@ -26,11 +26,13 @@ nam.processFilepath = function(filepath, callback) {
     }
 
     async.eachSeries(fileParts.reverse(), function(extension, next) {
-      var preprocessors = nam.preprocessors[extension];
+      var preprocessors = _.select(nam.preprocessors, function(processor) {
+        return processor.extension === extension || processor.extension === '*';
+      });
 
       if (preprocessors) {
         async.eachSeries(preprocessors, function(preprocessor, next) {
-          preprocessor(filepath, content, function(err, _content) {
+          preprocessor.processor(filepath, content, function(err, _content) {
             content = _content;
             next(err);
           });
@@ -40,11 +42,9 @@ nam.processFilepath = function(filepath, callback) {
       } else {
         next();
       }
-    },
-    function(err) {
+    }, function(err) {
       callback(err, content);
-    }
-    );
+    });
   });
 };
 
